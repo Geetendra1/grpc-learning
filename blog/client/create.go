@@ -8,10 +8,10 @@ import (
 )
 
 func createBlog(c pb.BlogServiceClient) string {
-	log.Println("---createBlog was invoked---")
+	log.Println("---createBlog was invoked---", c)
 
 	blog := &pb.Blog{
-		Id:       "1",
+		Id:       "2",
 		AuthorId: "Clement",
 		Title:    "My First Blog",
 		Content:  "Content of the first blog",
