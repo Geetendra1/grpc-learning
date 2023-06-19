@@ -1,6 +1,8 @@
 package main
 
 import (
+	"flag"
+	"fmt"
 	"grpc-learning/blog/controllers"
 	pb "grpc-learning/blog/proto"
 	"log"
@@ -10,27 +12,34 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-var addr string = "0.0.0.0:50051"
-
-// type Something struct {
-// 	Client pb.BlogServiceClient
-// }
+var (
+	addr = flag.String("addr", "localhost:50051", "the address to connect to")
+)
 
 func main() {
-	var r = gin.Default()
+	fmt.Println("runnig main")
 
-	conn, err := grpc.Dial(addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	flag.Parse()
+	conn, err := grpc.Dial(*addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 
 	if err != nil {
 		log.Fatalf("Couldn't connect to client: %v\n", err)
 	}
 
 	defer conn.Close()
-	client := pb.NewBlogServiceClient(conn)
-	r.POST("/create", func(c *gin.Context) { controllers.CreateBlog(c, client) })
+	client := pb.NewMovieServiceClient(conn)
+	r := gin.Default()
 
-	// id := createBlog(c, s)
+	r.GET("/", func(ctx *gin.Context) {
+		ctx.JSON(200, gin.H{
+			"message": "Hello World",
+		})
+	})
+	r.POST("/movies", func(c *gin.Context) { controllers.CreateBlog(c, client) })
+	r.GET("/movies", func(c *gin.Context) { controllers.ListAllBlogs(c, client) })
+	r.GET("/movies/:id", func(c *gin.Context) { controllers.GetMovie(c, client) })
+	r.PUT("/movies/:id", func(c *gin.Context) { controllers.UpdateMovie(c, client) })
+	r.DELETE("/movies/:id", func(c *gin.Context) { controllers.DeleteMovie(c, client) })
 
-	// fmt.Println("id", id)
-	// createBlog(c)
+	r.Run(":5000")
 }

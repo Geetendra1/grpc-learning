@@ -11,7 +11,6 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
-	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -19,292 +18,232 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// BlogServiceClient is the client API for BlogService service.
+// MovieServiceClient is the client API for MovieService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type BlogServiceClient interface {
-	// Requests the creation for a Blog
-	// Returns Status.INTERNAL if the blog couldn't be created due to Db error
-	// Returns the created Blog's Id
-	CreateBlog(ctx context.Context, in *Blog, opts ...grpc.CallOption) (*BlogId, error)
-	// Requests access to the content of a Blog by sending an Id
-	// Returns Status.NOT_FOUND if the Id doesn't match any Blog in Db
-	// Returns Blog content
-	ReadBlog(ctx context.Context, in *BlogId, opts ...grpc.CallOption) (*Blog, error)
-	// Requests the update of a Blog in Db
-	// Returns Status.NOT_FOUND if the Id doesn't match any Blog in Db
-	// Returns Status.INTERNAL if the blog couldn't be updated due to Db error
-	// Returns Empty
-	UpdateBlog(ctx context.Context, in *Blog, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	// Requests the delete of a Blog in Db by giving its Id
-	// Returns Status.NOT_FOUND if the Id doesn't match any Blog in Db
-	// Returns Status.INTERNAL if the blog couldn't be deleted due to Db error
-	// Returns Empty
-	DeleteBlog(ctx context.Context, in *BlogId, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	// Requests access to all the Blogs in Db
-	// Returns stream of Blogs
-	ListBlogs(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (BlogService_ListBlogsClient, error)
+type MovieServiceClient interface {
+	CreateMovie(ctx context.Context, in *CreateMovieRequest, opts ...grpc.CallOption) (*CreateMovieResponse, error)
+	GetMovie(ctx context.Context, in *ReadMovieRequest, opts ...grpc.CallOption) (*ReadMovieResponse, error)
+	GetMovies(ctx context.Context, in *ReadMoviesRequest, opts ...grpc.CallOption) (*ReadMoviesResponse, error)
+	UpdateMovie(ctx context.Context, in *UpdateMovieRequest, opts ...grpc.CallOption) (*UpdateMovieResponse, error)
+	DeleteMovie(ctx context.Context, in *DeleteMovieRequest, opts ...grpc.CallOption) (*DeleteMovieResponse, error)
 }
 
-type blogServiceClient struct {
+type movieServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewBlogServiceClient(cc grpc.ClientConnInterface) BlogServiceClient {
-	return &blogServiceClient{cc}
+func NewMovieServiceClient(cc grpc.ClientConnInterface) MovieServiceClient {
+	return &movieServiceClient{cc}
 }
 
-func (c *blogServiceClient) CreateBlog(ctx context.Context, in *Blog, opts ...grpc.CallOption) (*BlogId, error) {
-	out := new(BlogId)
-	err := c.cc.Invoke(ctx, "/blog.BlogService/CreateBlog", in, out, opts...)
+func (c *movieServiceClient) CreateMovie(ctx context.Context, in *CreateMovieRequest, opts ...grpc.CallOption) (*CreateMovieResponse, error) {
+	out := new(CreateMovieResponse)
+	err := c.cc.Invoke(ctx, "/proto.MovieService/CreateMovie", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *blogServiceClient) ReadBlog(ctx context.Context, in *BlogId, opts ...grpc.CallOption) (*Blog, error) {
-	out := new(Blog)
-	err := c.cc.Invoke(ctx, "/blog.BlogService/ReadBlog", in, out, opts...)
+func (c *movieServiceClient) GetMovie(ctx context.Context, in *ReadMovieRequest, opts ...grpc.CallOption) (*ReadMovieResponse, error) {
+	out := new(ReadMovieResponse)
+	err := c.cc.Invoke(ctx, "/proto.MovieService/GetMovie", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *blogServiceClient) UpdateBlog(ctx context.Context, in *Blog, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, "/blog.BlogService/UpdateBlog", in, out, opts...)
+func (c *movieServiceClient) GetMovies(ctx context.Context, in *ReadMoviesRequest, opts ...grpc.CallOption) (*ReadMoviesResponse, error) {
+	out := new(ReadMoviesResponse)
+	err := c.cc.Invoke(ctx, "/proto.MovieService/GetMovies", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *blogServiceClient) DeleteBlog(ctx context.Context, in *BlogId, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, "/blog.BlogService/DeleteBlog", in, out, opts...)
+func (c *movieServiceClient) UpdateMovie(ctx context.Context, in *UpdateMovieRequest, opts ...grpc.CallOption) (*UpdateMovieResponse, error) {
+	out := new(UpdateMovieResponse)
+	err := c.cc.Invoke(ctx, "/proto.MovieService/UpdateMovie", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *blogServiceClient) ListBlogs(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (BlogService_ListBlogsClient, error) {
-	stream, err := c.cc.NewStream(ctx, &BlogService_ServiceDesc.Streams[0], "/blog.BlogService/ListBlogs", opts...)
+func (c *movieServiceClient) DeleteMovie(ctx context.Context, in *DeleteMovieRequest, opts ...grpc.CallOption) (*DeleteMovieResponse, error) {
+	out := new(DeleteMovieResponse)
+	err := c.cc.Invoke(ctx, "/proto.MovieService/DeleteMovie", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &blogServiceListBlogsClient{stream}
-	if err := x.ClientStream.SendMsg(in); err != nil {
-		return nil, err
-	}
-	if err := x.ClientStream.CloseSend(); err != nil {
-		return nil, err
-	}
-	return x, nil
+	return out, nil
 }
 
-type BlogService_ListBlogsClient interface {
-	Recv() (*Blog, error)
-	grpc.ClientStream
-}
-
-type blogServiceListBlogsClient struct {
-	grpc.ClientStream
-}
-
-func (x *blogServiceListBlogsClient) Recv() (*Blog, error) {
-	m := new(Blog)
-	if err := x.ClientStream.RecvMsg(m); err != nil {
-		return nil, err
-	}
-	return m, nil
-}
-
-// BlogServiceServer is the server API for BlogService service.
-// All implementations must embed UnimplementedBlogServiceServer
+// MovieServiceServer is the server API for MovieService service.
+// All implementations must embed UnimplementedMovieServiceServer
 // for forward compatibility
-type BlogServiceServer interface {
-	// Requests the creation for a Blog
-	// Returns Status.INTERNAL if the blog couldn't be created due to Db error
-	// Returns the created Blog's Id
-	CreateBlog(context.Context, *Blog) (*BlogId, error)
-	// Requests access to the content of a Blog by sending an Id
-	// Returns Status.NOT_FOUND if the Id doesn't match any Blog in Db
-	// Returns Blog content
-	ReadBlog(context.Context, *BlogId) (*Blog, error)
-	// Requests the update of a Blog in Db
-	// Returns Status.NOT_FOUND if the Id doesn't match any Blog in Db
-	// Returns Status.INTERNAL if the blog couldn't be updated due to Db error
-	// Returns Empty
-	UpdateBlog(context.Context, *Blog) (*emptypb.Empty, error)
-	// Requests the delete of a Blog in Db by giving its Id
-	// Returns Status.NOT_FOUND if the Id doesn't match any Blog in Db
-	// Returns Status.INTERNAL if the blog couldn't be deleted due to Db error
-	// Returns Empty
-	DeleteBlog(context.Context, *BlogId) (*emptypb.Empty, error)
-	// Requests access to all the Blogs in Db
-	// Returns stream of Blogs
-	ListBlogs(*emptypb.Empty, BlogService_ListBlogsServer) error
-	mustEmbedUnimplementedBlogServiceServer()
+type MovieServiceServer interface {
+	CreateMovie(context.Context, *CreateMovieRequest) (*CreateMovieResponse, error)
+	GetMovie(context.Context, *ReadMovieRequest) (*ReadMovieResponse, error)
+	GetMovies(context.Context, *ReadMoviesRequest) (*ReadMoviesResponse, error)
+	UpdateMovie(context.Context, *UpdateMovieRequest) (*UpdateMovieResponse, error)
+	DeleteMovie(context.Context, *DeleteMovieRequest) (*DeleteMovieResponse, error)
+	mustEmbedUnimplementedMovieServiceServer()
 }
 
-// UnimplementedBlogServiceServer must be embedded to have forward compatible implementations.
-type UnimplementedBlogServiceServer struct {
+// UnimplementedMovieServiceServer must be embedded to have forward compatible implementations.
+type UnimplementedMovieServiceServer struct {
 }
 
-func (UnimplementedBlogServiceServer) CreateBlog(context.Context, *Blog) (*BlogId, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateBlog not implemented")
+func (UnimplementedMovieServiceServer) CreateMovie(context.Context, *CreateMovieRequest) (*CreateMovieResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateMovie not implemented")
 }
-func (UnimplementedBlogServiceServer) ReadBlog(context.Context, *BlogId) (*Blog, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ReadBlog not implemented")
+func (UnimplementedMovieServiceServer) GetMovie(context.Context, *ReadMovieRequest) (*ReadMovieResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetMovie not implemented")
 }
-func (UnimplementedBlogServiceServer) UpdateBlog(context.Context, *Blog) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateBlog not implemented")
+func (UnimplementedMovieServiceServer) GetMovies(context.Context, *ReadMoviesRequest) (*ReadMoviesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetMovies not implemented")
 }
-func (UnimplementedBlogServiceServer) DeleteBlog(context.Context, *BlogId) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteBlog not implemented")
+func (UnimplementedMovieServiceServer) UpdateMovie(context.Context, *UpdateMovieRequest) (*UpdateMovieResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateMovie not implemented")
 }
-func (UnimplementedBlogServiceServer) ListBlogs(*emptypb.Empty, BlogService_ListBlogsServer) error {
-	return status.Errorf(codes.Unimplemented, "method ListBlogs not implemented")
+func (UnimplementedMovieServiceServer) DeleteMovie(context.Context, *DeleteMovieRequest) (*DeleteMovieResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteMovie not implemented")
 }
-func (UnimplementedBlogServiceServer) mustEmbedUnimplementedBlogServiceServer() {}
+func (UnimplementedMovieServiceServer) mustEmbedUnimplementedMovieServiceServer() {}
 
-// UnsafeBlogServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to BlogServiceServer will
+// UnsafeMovieServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to MovieServiceServer will
 // result in compilation errors.
-type UnsafeBlogServiceServer interface {
-	mustEmbedUnimplementedBlogServiceServer()
+type UnsafeMovieServiceServer interface {
+	mustEmbedUnimplementedMovieServiceServer()
 }
 
-func RegisterBlogServiceServer(s grpc.ServiceRegistrar, srv BlogServiceServer) {
-	s.RegisterService(&BlogService_ServiceDesc, srv)
+func RegisterMovieServiceServer(s grpc.ServiceRegistrar, srv MovieServiceServer) {
+	s.RegisterService(&MovieService_ServiceDesc, srv)
 }
 
-func _BlogService_CreateBlog_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Blog)
+func _MovieService_CreateMovie_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateMovieRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BlogServiceServer).CreateBlog(ctx, in)
+		return srv.(MovieServiceServer).CreateMovie(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/blog.BlogService/CreateBlog",
+		FullMethod: "/proto.MovieService/CreateMovie",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BlogServiceServer).CreateBlog(ctx, req.(*Blog))
+		return srv.(MovieServiceServer).CreateMovie(ctx, req.(*CreateMovieRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _BlogService_ReadBlog_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(BlogId)
+func _MovieService_GetMovie_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ReadMovieRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BlogServiceServer).ReadBlog(ctx, in)
+		return srv.(MovieServiceServer).GetMovie(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/blog.BlogService/ReadBlog",
+		FullMethod: "/proto.MovieService/GetMovie",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BlogServiceServer).ReadBlog(ctx, req.(*BlogId))
+		return srv.(MovieServiceServer).GetMovie(ctx, req.(*ReadMovieRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _BlogService_UpdateBlog_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Blog)
+func _MovieService_GetMovies_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ReadMoviesRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BlogServiceServer).UpdateBlog(ctx, in)
+		return srv.(MovieServiceServer).GetMovies(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/blog.BlogService/UpdateBlog",
+		FullMethod: "/proto.MovieService/GetMovies",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BlogServiceServer).UpdateBlog(ctx, req.(*Blog))
+		return srv.(MovieServiceServer).GetMovies(ctx, req.(*ReadMoviesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _BlogService_DeleteBlog_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(BlogId)
+func _MovieService_UpdateMovie_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateMovieRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BlogServiceServer).DeleteBlog(ctx, in)
+		return srv.(MovieServiceServer).UpdateMovie(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/blog.BlogService/DeleteBlog",
+		FullMethod: "/proto.MovieService/UpdateMovie",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BlogServiceServer).DeleteBlog(ctx, req.(*BlogId))
+		return srv.(MovieServiceServer).UpdateMovie(ctx, req.(*UpdateMovieRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _BlogService_ListBlogs_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(emptypb.Empty)
-	if err := stream.RecvMsg(m); err != nil {
-		return err
+func _MovieService_DeleteMovie_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteMovieRequest)
+	if err := dec(in); err != nil {
+		return nil, err
 	}
-	return srv.(BlogServiceServer).ListBlogs(m, &blogServiceListBlogsServer{stream})
+	if interceptor == nil {
+		return srv.(MovieServiceServer).DeleteMovie(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.MovieService/DeleteMovie",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MovieServiceServer).DeleteMovie(ctx, req.(*DeleteMovieRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
-type BlogService_ListBlogsServer interface {
-	Send(*Blog) error
-	grpc.ServerStream
-}
-
-type blogServiceListBlogsServer struct {
-	grpc.ServerStream
-}
-
-func (x *blogServiceListBlogsServer) Send(m *Blog) error {
-	return x.ServerStream.SendMsg(m)
-}
-
-// BlogService_ServiceDesc is the grpc.ServiceDesc for BlogService service.
+// MovieService_ServiceDesc is the grpc.ServiceDesc for MovieService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var BlogService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "blog.BlogService",
-	HandlerType: (*BlogServiceServer)(nil),
+var MovieService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "proto.MovieService",
+	HandlerType: (*MovieServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "CreateBlog",
-			Handler:    _BlogService_CreateBlog_Handler,
+			MethodName: "CreateMovie",
+			Handler:    _MovieService_CreateMovie_Handler,
 		},
 		{
-			MethodName: "ReadBlog",
-			Handler:    _BlogService_ReadBlog_Handler,
+			MethodName: "GetMovie",
+			Handler:    _MovieService_GetMovie_Handler,
 		},
 		{
-			MethodName: "UpdateBlog",
-			Handler:    _BlogService_UpdateBlog_Handler,
+			MethodName: "GetMovies",
+			Handler:    _MovieService_GetMovies_Handler,
 		},
 		{
-			MethodName: "DeleteBlog",
-			Handler:    _BlogService_DeleteBlog_Handler,
+			MethodName: "UpdateMovie",
+			Handler:    _MovieService_UpdateMovie_Handler,
+		},
+		{
+			MethodName: "DeleteMovie",
+			Handler:    _MovieService_DeleteMovie_Handler,
 		},
 	},
-	Streams: []grpc.StreamDesc{
-		{
-			StreamName:    "ListBlogs",
-			Handler:       _BlogService_ListBlogs_Handler,
-			ServerStreams: true,
-		},
-	},
+	Streams:  []grpc.StreamDesc{},
 	Metadata: "blog.proto",
 }

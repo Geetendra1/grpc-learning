@@ -1,46 +1,52 @@
-syntax = "proto3";
-
-package blog;
-
-import "google/protobuf/empty.proto";
-
-option go_package = "grpc-learning/blog/proto";
-
-message Blog {
-  string id = 1;
-  string author_id = 2;
-  string title = 3;
-  string content = 4;
+syntax="proto3";
+ 
+package proto;
+ 
+option go_package="grpc-learning/blog/proto";
+ 
+ 
+message Movie {
+   string id =1;
+   string title =2;
+   string genre =3;
 }
-
-message BlogId {
-  string id = 1;
+ 
+message CreateMovieRequest {
+   Movie movie = 1;
 }
-
-service BlogService {
-  // Requests the creation for a Blog
-  // Returns Status.INTERNAL if the blog couldn't be created due to Db error
-  // Returns the created Blog's Id
-  rpc CreateBlog(Blog) returns (BlogId);
-
-  // Requests access to the content of a Blog by sending an Id
-  // Returns Status.NOT_FOUND if the Id doesn't match any Blog in Db
-  // Returns Blog content
-  rpc ReadBlog(BlogId) returns (Blog);
-
-  // Requests the update of a Blog in Db
-  // Returns Status.NOT_FOUND if the Id doesn't match any Blog in Db
-  // Returns Status.INTERNAL if the blog couldn't be updated due to Db error
-  // Returns Empty
-  rpc UpdateBlog(Blog) returns (google.protobuf.Empty);
-
-  // Requests the delete of a Blog in Db by giving its Id
-  // Returns Status.NOT_FOUND if the Id doesn't match any Blog in Db
-  // Returns Status.INTERNAL if the blog couldn't be deleted due to Db error
-  // Returns Empty
-  rpc DeleteBlog(BlogId) returns (google.protobuf.Empty);
-
-  // Requests access to all the Blogs in Db
-  // Returns stream of Blogs
-  rpc ListBlogs(google.protobuf.Empty) returns (stream Blog);
+message CreateMovieResponse {
+   Movie movie = 1;
+}
+message ReadMovieRequest{
+   string id =1;
+}
+message ReadMovieResponse{
+   Movie movie =1;
+}
+message ReadMoviesRequest{
+ 
+}
+message ReadMoviesResponse{
+   repeated Movie movies =1;
+}
+message UpdateMovieRequest{
+   Movie movie =1;
+}
+message UpdateMovieResponse{
+   Movie movie =1;
+}
+message DeleteMovieRequest{
+   string id =1;
+}
+message DeleteMovieResponse{
+   bool success =1;
+}
+ 
+ 
+service MovieService {
+   rpc CreateMovie(CreateMovieRequest) returns (CreateMovieResponse) {}
+   rpc GetMovie(ReadMovieRequest) returns (ReadMovieResponse) {}
+   rpc GetMovies(ReadMoviesRequest) returns (ReadMoviesResponse) {}
+   rpc UpdateMovie(UpdateMovieRequest) returns (UpdateMovieResponse) {}
+   rpc DeleteMovie(DeleteMovieRequest) returns (DeleteMovieResponse) {}
 }
