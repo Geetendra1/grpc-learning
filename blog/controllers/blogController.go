@@ -107,6 +107,7 @@ func DeleteMovie(c *gin.Context, client pb.MovieServiceClient) {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
+
 		return
 	}
 	if res.Success == true {
