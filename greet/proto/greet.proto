@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package greet;
+
+option go_package="grpc-learning/greet/proto";
+
+
+message GreetRequest {
+  string first_name = 1;
+}
+
+message GreetResponse {
+  string result = 1;
+}
+
+service GreetService {
+  // unary rpc 
+  rpc Greet(GreetRequest) returns (GreetResponse);
+
+  //server streaming   
+  rpc GreetManyTimes(GreetRequest) returns (stream GreetResponse);
+
+  //client streaming   
+  rpc LongGreet(stream GreetRequest) returns (GreetResponse);
+
+  //bi-directional streaming   
+  rpc GreetEveryone(stream GreetRequest) returns (stream GreetResponse);
+
+  //streaming with deadline   
+  rpc GreetWithDeadline(GreetRequest) returns (GreetResponse);
+};
